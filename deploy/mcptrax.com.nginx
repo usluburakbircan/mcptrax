@@ -36,6 +36,17 @@ server {
 
     client_max_body_size 8M;
 
+    # Landing'deki checker'ın herkese açık deneme hedefi + kendi kendini
+    # izleme (dogfooding): Laravel'in içindeki demo MCP server.
+    location = /demo-mcp {
+        proxy_pass http://127.0.0.1:8082/demo-mcp;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_buffering off;
+        proxy_read_timeout 120;
+    }
+
     # Paddle webhook'u Nuxt'a uğramadan doğrudan Laravel'e gider: imza HAM
     # gövde üzerinden doğrulanıyor, araya giren her katman risk.
     location = /api/paddle/webhook {
