@@ -1,10 +1,59 @@
 <script setup lang="ts">
 import type { ApiEnvelope, PublicCheckReport } from '~/types/api'
 import type { BillingCycle } from '~/composables/usePaddle'
+import { SITE_NAME, SITE_URL } from '#shared/site'
 
 const { api } = useApi()
 const auth = useAuthStore()
 const { openCheckout, opening } = usePaddle()
+
+useSeo({
+  title: 'mcptrax — MCP server monitoring',
+  description: 'Know when your MCP server breaks — before your users do. Real protocol checks: initialize handshake, tools/list drift detection, synthetic tool calls, and instant alerts.',
+  path: '/',
+})
+
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  'name': SITE_NAME,
+  'url': SITE_URL,
+  'logo': `${SITE_URL}/favicon.svg`,
+  'description': 'Uptime and tool-drift monitoring for Model Context Protocol servers.',
+})
+
+const faqs = [
+  {
+    q: 'What is MCP server monitoring?',
+    a: 'It means checking a Model Context Protocol server the way a real client uses it: connecting, completing the initialize handshake, listing tools, and optionally calling one — on a schedule. mcptrax runs this full sequence every 1 to 15 minutes and alerts you when any step fails, so problems surface as alerts instead of user reports.',
+  },
+  {
+    q: 'How is this different from UptimeRobot or a ping monitor?',
+    a: 'A ping monitor checks whether a URL returns a response. MCP servers can return HTTP 200 while the initialize handshake fails, the tool list is empty, or a tool errors on every call — all invisible to a ping. mcptrax speaks the MCP protocol itself, so it catches the failures agents actually hit.',
+  },
+  {
+    q: 'What is tool drift?',
+    a: 'Tool drift is when your server\'s tools/list output changes — a tool renamed, removed, or its input schema altered — while the server stays online. It silently breaks every client built against the old contract. mcptrax diffs your tool list on every check and flags drift the moment it appears.',
+  },
+  {
+    q: 'Do you support servers behind authentication?',
+    a: 'Yes. You can configure a custom header — an Authorization bearer token or an API key header — per monitor, and mcptrax sends it with every check. The value is stored server-side and never exposed in the dashboard again after saving.',
+  },
+  {
+    q: 'Can I cancel anytime?',
+    a: 'Yes. Pro is a monthly or yearly subscription managed through Paddle. Cancel from the billing portal in one click; your plan stays active until the end of the paid period, and your monitors simply revert to the free plan\'s limits after that.',
+  },
+]
+
+useJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  'mainEntity': faqs.map(f => ({
+    '@type': 'Question',
+    'name': f.q,
+    'acceptedAnswer': { '@type': 'Answer', 'text': f.a },
+  })),
+})
 
 // Logged-out visitors register first; logged-in users go straight to Paddle.
 const upgrade = async (cycle: BillingCycle) => {
@@ -86,7 +135,7 @@ const features = [
         </div>
 
         <!-- Free checker -->
-        <div class="mt-10 max-w-2xl">
+        <div id="check" class="mt-10 max-w-2xl scroll-mt-24">
           <form
             class="flex flex-col sm:flex-row gap-2 p-2 rounded-lg border border-mt-border bg-mt-raised shadow-[0_0_60px_-20px_rgba(62,232,147,0.25)]"
             @submit.prevent="runCheck"
@@ -119,6 +168,19 @@ const features = [
             </p>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Trust strip -->
+    <section class="border-t border-mt-border-soft">
+      <div class="max-w-site mx-auto px-4 sm:px-6 py-10">
+        <p class="mt-eyebrow text-center mb-5">Monitors real MCP servers</p>
+        <ul class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+          <li v-for="name in ['DeepWiki', 'Context7', 'Microsoft Learn', 'Hugging Face', 'Astro Docs']" :key="name"
+              class="font-mono text-[13px] text-mt-faint">
+            {{ name }}
+          </li>
+        </ul>
       </div>
     </section>
 
@@ -175,6 +237,19 @@ const features = [
               </button>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="border-t border-mt-border-soft">
+      <div class="max-w-site mx-auto px-4 sm:px-6 py-16 sm:py-20">
+        <p class="mt-eyebrow mb-8">Questions</p>
+        <div class="max-w-2xl space-y-3">
+          <details v-for="f in faqs" :key="f.q" class="mt-faq mt-card px-5 py-4">
+            <summary class="text-[14.5px] font-medium text-mt-text">{{ f.q }}</summary>
+            <p class="mt-3 text-[13.5px] leading-relaxed text-mt-muted">{{ f.a }}</p>
+          </details>
         </div>
       </div>
     </section>

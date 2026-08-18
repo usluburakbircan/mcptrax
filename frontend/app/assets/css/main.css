@@ -99,6 +99,86 @@ h1, h2, h3 {
   }
 }
 
+/* Article prose — tuned for long-form technical reading. */
+.mt-prose {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--mt-muted);
+}
+.mt-prose > * + * { margin-top: 1.15em; }
+.mt-prose h2 {
+  margin-top: 2.4em;
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--mt-text);
+}
+.mt-prose h3 {
+  margin-top: 1.8em;
+  font-size: 16.5px;
+  font-weight: 600;
+  color: var(--mt-text);
+}
+.mt-prose strong { color: var(--mt-text); font-weight: 600; }
+.mt-prose a {
+  color: var(--mt-up);
+  text-decoration: underline;
+  text-decoration-color: rgba(62, 232, 147, 0.35);
+  text-underline-offset: 3px;
+}
+.mt-prose a:hover { text-decoration-color: var(--mt-up); }
+.mt-prose code {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.86em;
+  background: var(--mt-soft);
+  border: 1px solid var(--mt-border-soft);
+  border-radius: 4px;
+  padding: 0.12em 0.38em;
+  color: var(--mt-text);
+}
+.mt-prose pre {
+  background: var(--mt-raised);
+  border: 1px solid var(--mt-border-soft);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  line-height: 1.65;
+}
+.mt-prose pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: 12.5px;
+  color: var(--mt-text);
+}
+.mt-prose ul, .mt-prose ol { padding-left: 1.4em; }
+.mt-prose ul { list-style: disc; }
+.mt-prose ol { list-style: decimal; }
+.mt-prose li { margin-top: 0.45em; }
+.mt-prose li::marker { color: var(--mt-faint); }
+.mt-prose blockquote {
+  border-left: 2px solid var(--mt-up);
+  padding-left: 16px;
+  color: var(--mt-text);
+}
+
+/* Landing FAQ accordions. */
+.mt-faq summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.mt-faq summary::-webkit-details-marker { display: none; }
+.mt-faq summary::after {
+  content: '+';
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  color: var(--mt-faint);
+  flex-shrink: 0;
+}
+.mt-faq[open] summary::after { content: '−'; }
+
 /* Live "up" pulse — a quiet heartbeat, the only ambient motion. */
 .mt-pulse {
   position: relative;

@@ -1,6 +1,12 @@
 <script setup lang="ts">
 definePageMeta({ middleware: 'guest' })
 
+useSeo({
+  title: 'Sign in — mcptrax',
+  description: 'Sign in to your mcptrax account to manage MCP server monitors and alerts.',
+  path: '/login',
+})
+
 const auth = useAuthStore()
 const route = useRoute()
 

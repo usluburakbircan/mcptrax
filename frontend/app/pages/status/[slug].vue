@@ -21,8 +21,12 @@ const notFound = computed(() => {
   return (err?.response?.status ?? err?.statusCode) === 404
 })
 
-useHead({
-  title: computed(() => status.value ? `${status.value.name} status — mcptrax` : 'Status — mcptrax'),
+useSeo({
+  title: () => status.value ? `${status.value.name} status — mcptrax` : 'Status — mcptrax',
+  description: () => status.value
+    ? `Live status, 90-day uptime and latency for ${status.value.name}, monitored by mcptrax.`
+    : 'Live MCP server status monitored by mcptrax.',
+  path: `/status/${slug.value}`,
 })
 
 const verdict = computed(() => {

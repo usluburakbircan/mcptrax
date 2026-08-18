@@ -1,6 +1,12 @@
 <script setup lang="ts">
 definePageMeta({ middleware: 'guest' })
 
+useSeo({
+  title: 'Create your account — mcptrax',
+  description: 'Start monitoring your MCP server free: full protocol checks every 15 minutes, tool drift detection and email alerts.',
+  path: '/register',
+})
+
 const auth = useAuthStore()
 const route = useRoute()
 
