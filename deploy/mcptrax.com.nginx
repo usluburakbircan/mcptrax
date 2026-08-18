@@ -1,0 +1,57 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name mcptrax.com www.mcptrax.com;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/mcptrax/acme;
+    }
+
+    location / {
+        return 301 https://mcptrax.com$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name www.mcptrax.com;
+
+    ssl_certificate     /etc/ssl/mcptrax/mcptrax.com.crt;
+    ssl_certificate_key /etc/ssl/mcptrax/mcptrax.com.key;
+
+    return 301 https://mcptrax.com$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name mcptrax.com;
+
+    ssl_certificate     /etc/ssl/mcptrax/mcptrax.com.crt;
+    ssl_certificate_key /etc/ssl/mcptrax/mcptrax.com.key;
+
+    access_log /var/log/nginx/mcptrax.access.log;
+    error_log  /var/log/nginx/mcptrax.error.log;
+
+    client_max_body_size 8M;
+
+    # Paddle webhook'u Nuxt'a uğramadan doğrudan Laravel'e gider: imza HAM
+    # gövde üzerinden doğrulanıyor, araya giren her katman risk.
+    location = /api/paddle/webhook {
+        proxy_pass http://127.0.0.1:8082/api/paddle/webhook;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:3200;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}

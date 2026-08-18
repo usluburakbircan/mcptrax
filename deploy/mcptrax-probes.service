@@ -1,0 +1,17 @@
+[Unit]
+Description=mcptrax probe queue worker
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=root
+Restart=always
+RestartSec=5
+# --max-time=3600: worker saatte bir temiz kapanıp systemd tarafından yeniden
+# başlatılır; kod güncellemeleri en geç bir saat içinde workera yansır.
+ExecStart=/usr/bin/docker exec -u www-data -w /var/www/mcptrax/mcptrax.com/backend mcptrax-php \
+    php artisan queue:work --queue=probes --sleep=3 --tries=1 --max-time=3600 --timeout=60
+
+[Install]
+WantedBy=multi-user.target

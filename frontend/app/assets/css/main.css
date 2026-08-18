@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Surfaces — near-black with a cold, instrument-panel cast. */
+  --mt-bg: #0a0c0e;
+  --mt-raised: #0f1215;
+  --mt-soft: #14181c;
+
+  --mt-border: #23292f;
+  --mt-border-soft: #1a1f24;
+
+  --mt-text: #e7ecef;
+  --mt-muted: #9aa5ad;
+  --mt-faint: #5c666e;
+
+  /* One accent: signal green. It IS the "up" color. */
+  --mt-up: #3ee893;
+  --mt-down: #ff5d5d;
+  --mt-warn: #f2b84b;
+
+  /* RGB channels for Tailwind opacity modifiers (e.g. border-mt-up/40). */
+  --mt-raised-rgb: 15 18 21;
+  --mt-soft-rgb: 20 24 28;
+  --mt-up-rgb: 62 232 147;
+  --mt-down-rgb: 255 93 93;
+  --mt-warn-rgb: 242 184 75;
+
+  --mt-up-dim: rgba(62, 232, 147, 0.12);
+  --mt-down-dim: rgba(255, 93, 93, 0.12);
+  --mt-warn-dim: rgba(242, 184, 75, 0.12);
+}
+
+html, body, #__nuxt { height: 100%; }
+
+html { color-scheme: dark; }
+
+body {
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--mt-bg);
+  color: var(--mt-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 15px;
+}
+
+h1, h2, h3 {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: rgba(62, 232, 147, 0.25);
+}
+
+:focus-visible {
+  outline: 2px solid var(--mt-up);
+  outline-offset: 2px;
+}
+
+@layer components {
+  .mt-input {
+    @apply w-full rounded-md border border-mt-border bg-mt-raised px-3 py-[9px] text-[14px] text-mt-text placeholder:text-mt-faint outline-none transition;
+  }
+  .mt-input:focus {
+    border-color: rgba(62, 232, 147, 0.55);
+    box-shadow: 0 0 0 3px rgba(62, 232, 147, 0.10);
+    outline: none;
+  }
+  .mt-label {
+    @apply block text-[12px] font-medium text-mt-muted mb-1.5;
+  }
+  .mt-hint {
+    @apply mt-1.5 text-[12px] text-mt-faint;
+  }
+  .mt-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-mt-up px-4 py-[10px] text-[14px] font-semibold text-[#04120a] transition;
+  }
+  .mt-btn-primary:hover { filter: brightness(1.08); }
+  .mt-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }
+  .mt-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-mt-border bg-transparent px-3.5 py-[9px] text-[13px] font-medium text-mt-muted transition;
+  }
+  .mt-btn-ghost:hover { color: var(--mt-text); border-color: var(--mt-muted); }
+  .mt-btn-ghost:disabled { opacity: 0.5; cursor: not-allowed; }
+  .mt-btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-transparent bg-transparent px-3.5 py-[9px] text-[13px] font-medium text-mt-down transition;
+  }
+  .mt-btn-danger:hover { background: var(--mt-down-dim); }
+  .mt-card {
+    @apply rounded-lg border border-mt-border-soft bg-mt-raised;
+  }
+  .mt-eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.18em] text-mt-faint;
+  }
+  .mt-chip {
+    @apply inline-flex items-center rounded border border-mt-border-soft bg-mt-soft px-1.5 py-0.5 font-mono text-[11.5px] text-mt-muted;
+  }
+}
+
+/* Live "up" pulse — a quiet heartbeat, the only ambient motion. */
+.mt-pulse {
+  position: relative;
+}
+.mt-pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: mt-pulse 2.4s ease-out infinite;
+}
+@keyframes mt-pulse {
+  0%   { transform: scale(1); opacity: 0.6; }
+  70%  { transform: scale(2.4); opacity: 0; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mt-pulse::after { animation: none; display: none; }
+  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
